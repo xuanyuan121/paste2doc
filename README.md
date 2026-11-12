@@ -9,11 +9,11 @@
 
 1. 打开 `chrome://extensions`（Edge 是 `edge://extensions`），打开右上角「开发者模式」。
 2. 点「加载已解压的扩展程序」，选中本文件夹。
-3. 双击 `host/安装本地组件.bat`。它把本地组件注册到当前用户下，不需要管理员权限。
+3. 双击 `本地组件/Paste2DocSetup.exe`，选个位置点「安装」。不需要管理员权限。
 4. 回到扩展页点一下「重新加载」，打开任意 AI 页面即可。
 
-第 3 步本机要是没有 Python 3，安装程序会先问你要从哪个源下载（华为云 / npmmirror / 官方），
-然后带进度条下个官方安装包装好，再继续注册。不装本地组件也能用，但只能复制纯文本。
+第 3 步的安装包自带运行环境（PyInstaller 打的 exe），不需要本机有 Python。
+不装本地组件也能用，但复制出来是纯文本。
 
 侧边栏右上角显示「未安装」时，下面会出现一块卡片，里面有个「下载本地组件」按钮 ——
 点一下直接把本地组件包下载下来（不跳转、不开新标签页），解压双击安装程序就行。
@@ -116,14 +116,17 @@ content/extract.js     网页 -> 模型（含公式、表格、代码、列表�
 content/ui.js          三种点选 · 蓝框高亮 · 复制流程
 panel/                 侧边栏
 lib/katex.min.js       兜底渲染公式用，按需注入
-host/                  本地组件（Python，无第三方依赖）
+host/                  本地组件（Python 源码，无第三方依赖）
   paste2doc_host.py    Native Messaging 入口 + 写剪贴板
   p2d_docx.py          模型 -> docx（WPS 走这条）
   p2d_rtf.py           模型 -> RTF（Word 走这条）
   p2d_math.py          MathML -> OMML -> RTF 公式
-  install_host.py      挑 Python、自检、写清单、注册到注册表
-  安装本地组件.bat     安装入口（没有 Python 时给镜像菜单、下载、静默装好）
-  卸载本地组件.bat     一键卸载（纯 reg.exe，不依赖 Python）
+  p2d_escape.py        RTF 转义
+  p2d_setup.py         安装内核：复制文件、写清单、登记浏览器和卸载项
+  setup_gui.py         安装/卸载界面（tkinter）
+  host_exe.py          打包成 exe 后的宿主入口
+  build_exe.py         用 PyInstaller 打出两个 exe
+  install_host.py      开发用：不打包，直接拿本机 Python 注册宿主
 site/                  下载站（index / host / privacy / 两个 zip）
 tools/stage_hosted.py  把两个下载站拼成一个目录，发给内置托管
 test/                  端到端测试
