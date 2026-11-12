@@ -151,6 +151,10 @@ python test/latex_test.py     # KaTeX 按需注入
 
 后三个会真的去粘贴、导 PDF，产物在 `paste2doc-lab/`。逐项的人工核对清单在 `自测清单.md`。
 
+注意：`pick_test` / `browser_test` / `ds_test` / `think_test` / `latex_test` 开头都会调一次
+`host/install_host.py`（它们要真写剪贴板），所以**跑完回归等于把本地组件装上了**。
+想退回「未安装」的状态做下载测试，双击 `host/卸载本地组件.bat` 输入 Y 就行。
+
 ## 分发与上架
 
 | 用途 | 地址 |
