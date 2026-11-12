@@ -141,3 +141,36 @@ python test/latex_test.py     # KaTeX 按需注入
 ```
 
 后三个会真的去粘贴、导 PDF，产物在 `paste2doc-lab/`。逐项的人工核对清单在 `自测清单.md`。
+
+## 分发与上架
+
+| 用途 | 地址 |
+| --- | --- |
+| 下载页（给人看的那种） | <https://xuanyuan121.github.io/paste2doc/> |
+| 安装包直链 | <https://xuanyuan121.github.io/paste2doc/download.zip> |
+| 源码 / 问题反馈 | <https://github.com/xuanyuan121/paste2doc> |
+| 备用下载（GitHub Release） | <https://github.com/xuanyuan121/paste2doc/releases/latest> |
+| 隐私政策 | <https://xuanyuan121.github.io/paste2doc/privacy.html> |
+
+三个包，各有各的用途，别混：
+
+```
+内容直贴-v<版本>.zip            发给同学的完整包：扩展 + 本地组件 + 使用说明
+                                （python 打包.py）
+dist/paste2doc-extension-<版本>.zip   上传商店的包：只有扩展本体，无 key、无脚本
+                                （python 打包上架.py，自带合规自检）
+site/download.zip                下载页上那个文件，就是完整包的一份拷贝
+```
+
+改完代码要同步线上时：
+
+```
+python 打包.py && python 打包上架.py
+python tools/store_shots.py        # 截图（真扩展跑出来的）
+python tools/build_site.py         # 重建下载页
+python deploy_github.py            # 更新仓库文件 + Release 附件
+python deploy_pages.py             # 更新 GitHub Pages
+```
+
+上架逐项填写稿（含可直接粘贴的中英文案、权限理由、审核说明、检查清单）在
+`SUBMIT-EDGE.md`；商店素材在 `store/`。
