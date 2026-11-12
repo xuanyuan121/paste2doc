@@ -79,7 +79,7 @@
   <p><b>扩展在运行时不发起任何网络请求。</b>没有账号、没有登录、没有统计、没有埋点、
     没有远程配置、没有远程代码。公式渲染用的 KaTeX 是打包在扩展里的本地文件，不从 CDN 加载。</p>
   <p>唯一的例外在侧边栏：没有本地组件的时候，那里会显示一个「下载本地组件」按钮。
-    <b>只有你点它</b>，扩展才会去我们的下载页取那个安装包（<code>download-host.zip</code>，约 36 KB）。
+    <b>只有你点它</b>，扩展才会去我们的下载页取那个安装包（<code>download-host.zip</code>，约 13 MB，运行环境已经打包在里面）。
     这次请求只带标准 HTTP 头，不包含你的任何内容，也不包含任何标识符；服务器能看到的就是你的 IP
     和这次下载本身，我们没有为此设置日志或统计。取回来之后由浏览器存到你本机，扩展不会再访问网络，
     直到你下次点那个按钮。</p>
@@ -122,15 +122,17 @@
 
     <h2>Optional local component</h2>
     <p>WPS Writer only accepts its proprietary clipboard format, which browsers cannot write, so a small
-      optional local helper writes it for you. It is launched on demand by the browser, exits when idle,
-      does not start at login, makes no network requests, does not read or write your files, and does
-      not execute commands. Without it the extension still works, producing plain text.</p>
+      optional local helper writes it for you. Once installed, the helper process is launched on demand by
+      the browser, exits when idle, does not start at login, makes no network requests, reads or writes no
+      files of yours, and executes no commands. Installing it is a normal per-user install: it copies its
+      own files into a folder you pick, adds one registry key per installed Chromium browser, and registers
+      an uninstall entry — no admin rights, no network. Without it the extension still works, producing plain text.</p>
 
     <h2>Network</h2>
     <p>No network requests from the extension at runtime. No account, no analytics, no telemetry, no
       remote configuration, no remote code. KaTeX is bundled locally.</p>
     <p>The single exception: when no local component is installed, the side panel shows a "Download local
-      component" button. Only if you click it does the extension fetch that installer (about 36 KB) from
+      component" button. Only if you click it does the extension fetch that installer (about 13 MB, its runtime is bundled) from
       our download page. The request carries standard HTTP headers only — none of your content and no
       identifier; the server sees your IP and the download itself, and we keep no logs or analytics for
       it. After saving the file the extension makes no further requests until you click that button
