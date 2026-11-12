@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隐私政策 · 内容直贴 Paste2Doc</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #f6f7f9; color: #16181d; line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 700px; margin: 0 auto; padding: 52px 24px 80px; }
+  h1 { font-size: 25px; font-weight: 650; letter-spacing: -.3px; }
+  .meta { margin-top: 8px; font-size: 13px; color: #8b929e; }
+  .short {
+    margin: 26px 0 8px; padding: 16px 18px; background: #fff; border: 1px solid #e3e7ee;
+    border-left: 3px solid #185fa5; border-radius: 10px; font-size: 14.5px;
+  }
+  h2 { font-size: 15px; font-weight: 650; margin: 32px 0 8px; padding-top: 20px; border-top: 1px solid #e4e7ec; }
+  p, li { font-size: 14px; color: #333a45; }
+  ul { margin: 6px 0 0 20px; }
+  li { margin-bottom: 4px; }
+  code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: #eef1f6;
+    border-radius: 4px; padding: 1px 5px; word-break: break-all; }
+  a { color: #185fa5; }
+  .en { margin-top: 52px; padding-top: 30px; border-top: 2px solid #e4e7ec; }
+  .en h1 { font-size: 20px; }
+  .en h2 { font-size: 14.5px; }
+  .back { display: inline-block; margin-top: 34px; font-size: 13.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>隐私政策 · 内容直贴 Paste2Doc</h1>
+  <p class="meta">最后更新：2026-11-12　适用版本：0.1.7 及以后</p>
+
+  <p class="short"><b>一句话：这个扩展不收集、不上传、不存储你的任何内容。它不联网。</b></p>
+
+  <h2>一、它读什么</h2>
+  <ul>
+    <li><b>只在你在页面上点击之后</b>，读取你点到的那一条回答（或那一段、那个区间）的文字与结构，
+      用来生成一份排好版的文档放进剪贴板。</li>
+    <li>为了判断"哪里是正文"，它会在页面上查找正文容器、标题、列表、表格、公式这些结构，
+      以及"这是不是思考过程 / 这是不是你自己的提问"。这些判断全部在当前页面内完成，结果不离开浏览器。</li>
+    <li>它<b>不收集</b>浏览历史、不收集你访问过哪些网站、不读取页面上你没选中的内容、
+      不读取输入框里你正在打的字。</li>
+  </ul>
+
+  <h2>二、它写什么</h2>
+  <ul>
+    <li><b>剪贴板</b>：只写不读。写入的就是你刚刚选中的那段回答（已排版的文档格式，或纯文本）。
+      扩展从不读取剪贴板里已有的内容。</li>
+    <li><b>本地偏好</b>：复制方式、排版选项、是否只复制纯文本。存在浏览器自带的
+      <code>chrome.storage.sync</code> 里，仅用于记住你的选择。它们会随浏览器账号同步到你自己的
+      其他设备，这是浏览器提供的能力；不会发到我们或任何第三方的服务器。</li>
+  </ul>
+
+  <h2>三、本地组件（可选）</h2>
+  <p>WPS 文字只接受它自己专用的剪贴板格式（<code>Kingsoft WPS 9.0 Format</code>），
+    浏览器没有写入这种格式的接口，因此需要一个很小的本地组件代写一下。它：</p>
+  <ul>
+    <li>由浏览器按需拉起，处理完当前这次复制后空闲退出，<b>不开机自启、不常驻</b>；</li>
+    <li><b>不联网</b>（代码中没有任何网络请求，也没有 URL 配置）；</li>
+    <li><b>不读写你的文件</b>，不执行系统命令；</li>
+    <li>只做一件事：把扩展已经算好的内容按 WPS / Word 的格式写进剪贴板；</li>
+    <li>卸载：删除扩展目录，并删除注册表
+      <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host</code> 与
+      <code>HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host</code>。</li>
+  </ul>
+  <p>不装本地组件时扩展依然可用，只是复制出来的是纯文本。</p>
+
+  <h2>四、网络</h2>
+  <p><b>扩展与本地组件都不发起任何网络请求。</b>没有账号、没有登录、没有统计、没有埋点、
+    没有远程配置、没有远程代码。公式渲染用的 KaTeX 是打包在扩展里的本地文件，不从 CDN 加载。</p>
+
+  <h2>五、第三方</h2>
+  <p>扩展内打包了开源组件 KaTeX（MIT 许可），版权归 Khan Academy 及贡献者所有，
+    清单见扩展目录内的 <code>THIRD-PARTY-NOTICES.txt</code>。除此之外没有其他第三方代码、SDK 或服务。</p>
+
+  <h2>六、儿童</h2>
+  <p>本扩展不面向 13 岁以下儿童，也不收集任何人的个人信息。</p>
+
+  <h2>七、变更</h2>
+  <p>本政策如有变更，会更新本页顶部的日期，并在扩展更新说明里写清改了什么。</p>
+
+  <h2>八、联系</h2>
+  <p>问题、疑问或数据相关请求：在
+    <a href="https://github.com/xuanyuan121/paste2doc/issues">GitHub Issues</a> 提出，或使用扩展商店详情页的「支持」入口。</p>
+
+  <div class="en">
+    <h1>Privacy Policy · Paste2Doc</h1>
+    <p class="meta">Last updated: 2026-11-12　Applies to: 0.1.7 and later</p>
+
+    <p class="short"><b>Short version: this extension does not collect, store, or transmit any of your
+      content. It makes no network requests.</b></p>
+
+    <h2>What it reads</h2>
+    <p>Only after you click, it reads the answer (or the single block, or the range) you pointed at, in
+      order to build a formatted document on your clipboard. To decide what counts as body text it
+      inspects page structure — content containers, headings, lists, tables, formulas, and whether
+      something is a "thinking" panel or your own question. All of that happens inside the page;
+      nothing leaves the browser. It does not collect browsing history, does not read content you did
+      not select, and does not read what you type.</p>
+
+    <h2>What it writes</h2>
+    <p><b>Clipboard</b>: write-only. It writes the answer you just selected. It never reads the existing
+      clipboard. <b>Preferences</b>: copy mode, formatting options, plain-text toggle — stored in
+      <code>chrome.storage.sync</code> so the browser can remember them for you. They are never sent to
+      us or to any third party.</p>
+
+    <h2>Optional local component</h2>
+    <p>WPS Writer only accepts its proprietary clipboard format, which browsers cannot write, so a small
+      optional local helper writes it for you. It is launched on demand by the browser, exits when idle,
+      does not start at login, makes no network requests, does not read or write your files, and does
+      not execute commands. Without it the extension still works, producing plain text.</p>
+
+    <h2>Network</h2>
+    <p>No network requests from the extension or the helper. No account, no analytics, no telemetry, no
+      remote configuration, no remote code. KaTeX is bundled locally.</p>
+
+    <h2>Contact</h2>
+    <p>Use the support link on the store listing, or open an issue at
+      <a href="https://github.com/xuanyuan121/paste2doc/issues">GitHub Issues</a>.</p>
+  </div>
+
+  <a class="back" href="index.html">← 回到首页</a>
+</div>
+</body>
+</html>
