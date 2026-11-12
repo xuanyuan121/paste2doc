@@ -9,10 +9,15 @@
 
 1. 打开 `chrome://extensions`（Edge 是 `edge://extensions`），打开右上角「开发者模式」。
 2. 点「加载已解压的扩展程序」，选中本文件夹。
-3. 双击 `host/安装到浏览器.bat`。它把本地组件注册到当前用户下，不需要管理员权限。
+3. 双击 `host/安装本地组件.bat`。它把本地组件注册到当前用户下，不需要管理员权限。
 4. 回到扩展页点一下「重新加载」，打开任意 AI 页面即可。
 
-第 3 步需要本机有 Python 3。没装本地组件也能用，但只能复制纯文本。
+第 3 步本机要是没有 Python 3，安装程序会先问你要从哪个源下载（华为云 / npmmirror / 官方），
+然后带进度条下个官方安装包装好，再继续注册。不装本地组件也能用，但只能复制纯文本。
+
+侧边栏右上角显示「未安装」时，下面会出现一块卡片，里面有个「下载本地组件」按钮 ——
+点一下直接把本地组件包下载下来（不跳转、不开新标签页），解压双击安装程序就行。
+这正是发给同学以后他们唯一的入口，所以那个地址必须国内能开（见「分发与上架」）。
 
 装完先双击 `host\自检.bat`：它检查本地组件并在剪贴板里放一份自检样例，粘到 WPS 里
 一眼就能看出是不是通的。完整的分层自测步骤见 `自测清单.md`。
@@ -116,7 +121,11 @@ host/                  本地组件（Python，无第三方依赖）
   p2d_docx.py          模型 -> docx（WPS 走这条）
   p2d_rtf.py           模型 -> RTF（Word 走这条）
   p2d_math.py          MathML -> OMML -> RTF 公式
-  install_host.py      注册到注册表
+  install_host.py      挑 Python、自检、写清单、注册到注册表
+  安装本地组件.bat     安装入口（没有 Python 时给镜像菜单、下载、静默装好）
+  卸载本地组件.bat     一键卸载（纯 reg.exe，不依赖 Python）
+site/                  下载站（index / host / privacy / 两个 zip）
+tools/stage_hosted.py  把两个下载站拼成一个目录，发给内置托管
 test/                  端到端测试
 ```
 
@@ -147,29 +156,50 @@ python test/latex_test.py     # KaTeX 按需注入
 | 用途 | 地址 |
 | --- | --- |
 | 下载页（给人看的那种） | <https://xuanyuan121.github.io/paste2doc/> |
+| 只下载本地组件 | <https://xuanyuan121.github.io/paste2doc/host.html> |
 | 安装包直链 | <https://xuanyuan121.github.io/paste2doc/download.zip> |
+| 本地组件直链（国内可开） | <https://formula2word.app.workbuddy.host/paste2doc/download-host.zip?sharecode=FY5JRY7EVJ> |
 | 源码 / 问题反馈 | <https://github.com/xuanyuan121/paste2doc> |
 | 备用下载（GitHub Release） | <https://github.com/xuanyuan121/paste2doc/releases/latest> |
 | 隐私政策 | <https://xuanyuan121.github.io/paste2doc/privacy.html> |
+
+**内置托管只有一个发布位。** 实测：从这个账号发任何目录，都会覆盖同一个应用
+（`wbapp_CuiKfwq02kLchO2GG4DWa0`），并把 `.wbapp_*.genie` 的 localDir 改指过去 ——
+所以「公式直贴」的下载页和「内容直贴」的下载页不能各占一个位置。
+现在的做法是**一个目录装两个产品**：
+
+```
+hosted-site/                 <- 发这一个目录（tools/stage_hosted.py 拼出来）
+  index.html privacy.html download helper     公式直贴（根目录，链接不变）
+  paste2doc/                                  内容直贴（/paste2doc/ 子路径）
+```
+
+站内链接会自动带上 `?sharecode=`（两个模板末尾那段小脚本），所以子目录里的
+`download.zip`、`host.html` 点开也对。
 
 三个包，各有各的用途，别混：
 
 ```
 内容直贴-v<版本>.zip            发给同学的完整包：扩展 + 本地组件 + 使用说明
                                 （python 打包.py）
+内容直贴-本地组件-v<版本>.zip   只装本地组件的那一包：安装程序 + 卸载 + 说明
+                                （python 打包本地组件.py）
 dist/paste2doc-extension-<版本>.zip   上传商店的包：只有扩展本体，无 key、无脚本
                                 （python 打包上架.py，自带合规自检）
 site/download.zip                下载页上那个文件，就是完整包的一份拷贝
+site/download-host.zip           侧边栏按钮下的那个文件，就是组件包的一份拷贝
 ```
 
 改完代码要同步线上时：
 
 ```
 python 打包.py && python 打包上架.py
+python 打包本地组件.py
 python tools/store_shots.py        # 截图（真扩展跑出来的）
-python tools/build_site.py         # 重建下载页
+python tools/build_site.py         # 重建下载页（index.html / host.html / 两个 zip）
 python deploy_github.py            # 更新仓库文件 + Release 附件
 python deploy_pages.py             # 更新 GitHub Pages
+python tools/stage_hosted.py       # 拼 hosted-site/，再用「发布为应用」发这个目录
 ```
 
 上架逐项填写稿（含可直接粘贴的中英文案、权限理由、审核说明、检查清单）在
