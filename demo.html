@@ -91,6 +91,12 @@
   .a5d8 { position: relative; }
   .e167de1c { margin: 0 0 14px; background: #f7f7f9; border-radius: 10px; padding: 10px 14px; }
   .h1x { color: #8a8a92; font-size: 13px; cursor: pointer; }
+  /* 回答开头那个标签胶囊（真实 DeepSeek 上就是「求推导」那一小块） */
+  .tagchip {
+    display: inline-block; margin: 0 0 10px; padding: 3px 9px;
+    font-size: 12.5px; line-height: 1.5; color: #4b4b55;
+    border: 1px solid #d8d8e0; border-radius: 999px; background: #fafafc;
+  }
   .ds-think-content { margin-top: 8px; color: #5a5a63; font-size: 13.5px; }
   .ds-think-content p { margin: 0 0 8px; }
 
@@ -150,6 +156,7 @@
     </div>
 
     <div class="markdown ds-markdown">
+      <span class="tagchip">求推导</span>
       <h3>磁效应实验报告</h3>
       <p>报告按三部分检查就能覆盖绝大多数一眼可见的错误，下面逐条对齐。</p>
       <ul>
