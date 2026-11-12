@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>内容直贴 · DeepSeek 式结构测试页</title>
+<style>
+  /* 这一页照着 DeepSeek 的真实结构造：
+       · 类名全是哈希，回答正文是 .ds-markdown
+       · 用户提问没有任何角色标记，只靠「右侧气泡 + 圆角底色」区分
+       · 回答上面顶着一块「已思考（用时 16 秒）」，思考内容也是 markdown
+       · 回答下面挂一条操作条（复制 / 重试 / 点赞 …）
+     这四件事凑在一起，就是用户报的那几条毛病：思考有蓝框、提问有蓝框、
+     开着扩展点不动页面按钮、分点列表整块算一段。 */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #fff; color: #1b1b1f;
+    font: 15px/1.75 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .side {
+    position: fixed; left: 0; top: 0; width: 236px; height: 100vh;
+    padding: 14px 10px; background: #f9f9fa; border-right: 1px solid #eeeef2;
+    overflow: auto;
+  }
+  .side button {
+    display: block; width: 100%; text-align: left; margin: 0 0 2px;
+    padding: 8px 10px; border: 0; border-radius: 8px; background: transparent;
+    color: #3b3b45; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .side button:hover { background: #efeff3; }
+  .side .new { background: #eef3fb; color: #185fa5; font-weight: 500; margin-bottom: 14px; }
+  .side .t { font-size: 11.5px; color: #9a9aa2; margin: 12px 0 6px 10px; }
+
+  /* 真实站点是「整页 flex 布局」：顶栏 + 滚动区 + 输入框，各自占满 */
+  .main {
+    margin-left: 236px; height: 100vh;
+    display: flex; flex-direction: column; min-height: 0;
+  }
+  /* 顶栏和消息区在同一个容器里（真实站点常见），输入框在外面 ——
+     指在标题上时最容易「顺着祖先链抬成整条对话」，这里就按这个结构造 */
+  .chat { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+
+  /* 顶栏：会话标题 + 分享。指这里不该有任何蓝框 */
+  .topbar {
+    flex: none; height: 52px; padding: 0 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #f0f0f3;
+  }
+  .ttl { font-size: 14.5px; color: #1b1b1f; }
+  .topbar .spacer { flex: 1; }
+  .topbar button {
+    border: 0; background: transparent; color: #6b6b75;
+    font: inherit; cursor: pointer; padding: 6px; border-radius: 6px;
+  }
+
+  .scroll { flex: 1; overflow: auto; min-height: 0; }
+  .col { max-width: 760px; margin: 0 auto; padding: 28px 20px 40px; }
+
+  /* 输入框：整块是个带边框的卡片，里面是 textarea + 两个胶囊按钮 + 发送 */
+  .composer { flex: none; padding: 10px 20px 6px; }
+  .cbox {
+    max-width: 760px; margin: 0 auto; padding: 12px 14px;
+    border: 1px solid #e6e6ec; border-radius: 18px; background: #fff;
+  }
+  .cbox textarea {
+    width: 100%; height: 46px; border: 0; outline: 0; resize: none;
+    background: transparent; font: inherit; color: #1b1b1f;
+  }
+  .crow { display: flex; align-items: center; gap: 8px; }
+  .chip {
+    padding: 4px 10px; border-radius: 999px; border: 1px solid #e2e6f0;
+    color: #3b5bdb; font-size: 12.5px; background: #f7f9ff;
+  }
+  .crow .spacer { flex: 1; }
+  .send {
+    width: 30px; height: 30px; border: 0; border-radius: 50%;
+    background: #c9d4f5; color: #fff;
+  }
+  .disc { max-width: 760px; margin: 2px auto 0; text-align: center;
+          font-size: 11.5px; color: #a5a5ad; }
+
+  /* 用户那一轮：整行通栏，气泡靠右 */
+  .f3a1 { display: flex; flex-direction: column; align-items: flex-end; margin: 0 0 26px; }
+  .u9c2 {
+    max-width: 62%; padding: 10px 14px; margin-bottom: 8px;
+    background: #eff3f8; border-radius: 12px; font-size: 14.5px;
+  }
+  .u9c2 p { margin: 0; }
+  .b7e1 { display: flex; gap: 8px; align-items: center; font-size: 13px; color: #3b3b45; }
+
+  /* 回答：正文 + 思考块 + 操作条 */
+  .a5d8 { position: relative; }
+  .e167de1c { margin: 0 0 14px; background: #f7f7f9; border-radius: 10px; padding: 10px 14px; }
+  .h1x { color: #8a8a92; font-size: 13px; cursor: pointer; }
+  .ds-think-content { margin-top: 8px; color: #5a5a63; font-size: 13.5px; }
+  .ds-think-content p { margin: 0 0 8px; }
+
+  .markdown h3 { font-size: 18px; margin: 6px 0 12px; }
+  .markdown p { margin: 0 0 12px; }
+  .markdown ul, .markdown ol { margin: 0 0 12px; padding-left: 26px; }
+  .markdown li { margin-bottom: 8px; }
+  .markdown strong { font-weight: 600; }
+
+  .a41 { display: flex; gap: 10px; margin-top: 6px; }
+  .a41 button {
+    border: 0; background: transparent; color: #8a8a92; font: inherit;
+    font-size: 12.5px; cursor: pointer; padding: 4px 6px; border-radius: 6px;
+  }
+  .a41 button:hover { background: #f2f2f5; }
+</style>
+</head>
+<body>
+
+<aside class="side">
+  <button class="new" id="newChat">开启新对话</button>
+  <p class="t">今天</p>
+  <button class="hist" data-h="1">Edge 顶部变蓝原因</button>
+  <button class="hist" data-h="2">声子散射动量守恒翻译</button>
+  <button class="hist" data-h="3">数字用 TimesNewRoman</button>
+  <p class="t">昨天</p>
+  <button class="hist" data-h="4">大连英博中超夺冠</button>
+  <button class="hist" data-h="5">磁效应实验报告</button>
+</aside>
+
+<div class="main">
+<div class="chat">
+<div class="topbar">
+  <span class="ttl">偏迹trA trB解释</span>
+  <button id="renameBtn" title="重命名">✎</button>
+  <span class="spacer"></span>
+  <button id="shareBtn" title="分享">↗</button>
+</div>
+
+<div class="scroll">
+<div class="col">
+
+  <div class="f3a1">
+    <div class="u9c2"><div class="b7e1">磁效应.docx</div></div>
+    <div class="u9c2"><p>没什么大问题吧，没有那种一眼就是错的吧</p></div>
+  </div>
+
+  <div class="a5d8">
+    <div class="e167de1c">
+      <div class="h1x">已思考（用时 16 秒）</div>
+      <div class="ds-think-content">
+        <div class="markdown">
+          <p>先比一遍几份模板的判据，这段是思考过程，既不该有蓝框也不该被复制。</p>
+          <p>再检查一遍公式和单位，如果这里是长文本，同样不应该出现在文档里。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="markdown ds-markdown">
+      <h3>磁效应实验报告</h3>
+      <p>报告按三部分检查就能覆盖绝大多数一眼可见的错误，下面逐条对齐。</p>
+      <ul>
+        <li><strong>前置部分</strong>：标题、作者、摘要、关键词、英文标题、英文摘要、英文关键词，缺一项都算不完整。</li>
+        <li><strong>正文结构</strong>：引言、实验（标定、法拉第角、克尔转角、克尔椭圆率）、实验结果与分析、理论解释、结论，顺序不能乱。</li>
+        <li><strong>排版与格式</strong>：公式、图片、单位要统一，图和表都要有编号，正文里要能一一对应引用。</li>
+      </ul>
+    </div>
+
+    <div class="a41">
+      <button id="copyBtn">复制</button>
+      <button id="retryBtn">重试</button>
+      <button id="likeBtn">赞</button>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<div class="composer">
+  <div class="cbox">
+    <textarea id="askBox" placeholder="给 DeepSeek 发送消息"></textarea>
+    <div class="crow">
+      <span class="chip">深度思考</span>
+      <span class="chip">智能搜索</span>
+      <span class="spacer"></span>
+      <button class="send" id="sendBtn" title="发送">↑</button>
+    </div>
+  </div>
+  <p class="disc">内容由 AI 生成，请仔细甄别</p>
+</div>
+
+</div>
+
+<script>
+  // 页面自己的按钮：开着扩展的时候必须还能点（测「点击不再被拦」）
+  window.__hits = [];
+  document.querySelectorAll('.side button, .a41 button').forEach((b) => {
+    b.addEventListener('click', () => {
+      window.__hits.push(b.id || b.dataset.h || b.textContent.trim());
+      b.dataset.clicked = '1';
+    });
+  });
+</script>
+</body>
+</html>
