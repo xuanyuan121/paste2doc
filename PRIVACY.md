@@ -39,13 +39,14 @@ WPS 文字只接受它自己专用的剪贴板格式（`Kingsoft WPS 9.0 Format`
 - **不联网**（代码中没有任何网络请求，也没有 URL 配置）；
 - **不读写你的文件**，不执行系统命令；
 - 只做一件事：把扩展已经算好的内容按 WPS / Word 的格式写进剪贴板；
-- 安装程序（`安装本地组件.bat`）在**你选择**「下载一个 Python」之后，才会去你选的那个
-  镜像（华为云 / npmmirror / python.org）取官方 Python 安装包，装到当前用户下；
-  不选就不会下载任何东西；
-- 卸载方式：双击 `卸载本地组件.bat`（它删掉注册表
+- 安装程序（`Paste2DocSetup.exe`）只做本机的事：复制文件、写一份宿主清单、往当前用户的
+  注册表登记三条浏览器路径和一个卸载项。它**不联网、不下载任何东西**——运行环境
+  （Python 运行时）已经打包在 exe 里，用户不需要另外安装 Python；
+- 卸载方式：「设置 → 应用 → 已安装的应用」里卸载「内容直贴 · 本地组件」，或者再打开
+  一次 `Paste2DocSetup.exe` 点「卸载」。它会删掉注册表
   `HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host`、
-  `HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host` 和
-  `...\Chromium\...` 三条登记，以及安装时生成的启动脚本），不会留下后台进程。
+  `HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host`、
+  `...\Chromium\...` 三条登记和安装目录，不会留下后台进程。
 
 不装本地组件时扩展依然可用，只是复制出来的是纯文本。
 
@@ -114,8 +115,9 @@ WPS Writer only accepts its proprietary clipboard format, which browsers cannot
 write, so a small optional local helper writes it for you. It is launched on
 demand by the browser, exits when idle, does not start at login, makes no network
 requests, does not read or write your files, and does not execute commands.
-Without it the extension still works, producing plain text. Its installer only
-downloads a Python runtime if you explicitly pick one of the offered mirrors.
+Without it the extension still works, producing plain text. Its installer does
+everything locally — no downloads, and no separate Python installation is needed,
+because the runtime is bundled inside the executable.
 
 ## Network
 
