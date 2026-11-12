@@ -1,12 +1,13 @@
 # 隐私政策 · 内容直贴 Paste2Doc
 
-最后更新：2026-11-12　适用版本：0.1.7 及以后
+最后更新：2026-11-12　适用版本：0.1.8 及以后
 
 ---
 
 ## 一句话
 
-**这个扩展不收集、不上传、不存储你的任何内容。它不联网。**
+**这个扩展不收集、不上传、不存储你的任何内容。运行时不联网。
+唯一的一次网络请求，是你主动点「下载本地组件」时去取那个安装包。**
 
 ---
 
@@ -38,17 +39,28 @@ WPS 文字只接受它自己专用的剪贴板格式（`Kingsoft WPS 9.0 Format`
 - **不联网**（代码中没有任何网络请求，也没有 URL 配置）；
 - **不读写你的文件**，不执行系统命令；
 - 只做一件事：把扩展已经算好的内容按 WPS / Word 的格式写进剪贴板；
-- 卸载方式：删除扩展目录，并删除注册表 `HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host`
-  与 `HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host`（双击
-  `host\安装到浏览器.bat` 会重新注册，不会留下后台进程）。
+- 安装程序（`安装本地组件.bat`）在**你选择**「下载一个 Python」之后，才会去你选的那个
+  镜像（华为云 / npmmirror / python.org）取官方 Python 安装包，装到当前用户下；
+  不选就不会下载任何东西；
+- 卸载方式：双击 `卸载本地组件.bat`（它删掉注册表
+  `HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host`、
+  `HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host` 和
+  `...\Chromium\...` 三条登记，以及安装时生成的启动脚本），不会留下后台进程。
 
 不装本地组件时扩展依然可用，只是复制出来的是纯文本。
 
 ## 四、网络
 
-**扩展与本地组件都不发起任何网络请求。** 没有账号、没有登录、没有统计、没有埋点、
+**扩展在运行时不发起任何网络请求。** 没有账号、没有登录、没有统计、没有埋点、
 没有远程配置、没有远程代码。公式渲染用的 KaTeX 是打包在扩展里的本地文件，
 不从 CDN 加载。
+
+唯一的例外在侧边栏：当浏览器里没有本地组件时，侧边栏会显示一块「本地组件未安装」，
+上面有一个「下载本地组件」按钮。**只有你点它**，扩展才会去我们的下载页取那个
+安装包（`download-host.zip`，36 KB 左右）。这次请求只带标准 HTTP 头，
+**不包含你的任何内容、不包含任何标识符**；服务器能看到的就是你的 IP 和这次下载本身，
+我们没有为此设置任何日志或统计。取回来之后由浏览器保存到你本机的下载目录，
+扩展不会再访问网络，直到你下次点那个按钮。
 
 ## 五、第三方
 
@@ -72,10 +84,11 @@ WPS 文字只接受它自己专用的剪贴板格式（`Kingsoft WPS 9.0 Format`
 
 # Privacy Policy · Paste2Doc
 
-Last updated: 2026-11-12　Applies to: 0.1.7 and later
+Last updated: 2026-11-12　Applies to: 0.1.8 and later
 
 **Short version: this extension does not collect, store, or transmit any of your
-content. It makes no network requests.**
+content. It makes no network requests at runtime. The single exception is the
+"Download local component" button, which fetches that installer when you click it.**
 
 ## What it reads
 
@@ -101,12 +114,21 @@ WPS Writer only accepts its proprietary clipboard format, which browsers cannot
 write, so a small optional local helper writes it for you. It is launched on
 demand by the browser, exits when idle, does not start at login, makes no network
 requests, does not read or write your files, and does not execute commands.
-Without it the extension still works, producing plain text.
+Without it the extension still works, producing plain text. Its installer only
+downloads a Python runtime if you explicitly pick one of the offered mirrors.
 
 ## Network
 
-No network requests from the extension or the helper. No account, no analytics,
+No network requests from the extension at runtime. No account, no analytics,
 no telemetry, no remote configuration, no remote code. KaTeX is bundled locally.
+
+The single exception: when no local component is installed, the side panel shows
+a "Download local component" button. Only if you click it does the extension
+fetch that installer (about 36 KB) from our download page. The request carries
+standard HTTP headers only — none of your content and no identifier; the server
+sees your IP and the download itself, and we keep no logs or analytics for it.
+After saving the file the extension makes no further requests until you click
+that button again.
 
 ## Contact
 
