@@ -35,9 +35,9 @@
 <div class="wrap">
 
   <h1>隐私政策 · 内容直贴 Paste2Doc</h1>
-  <p class="meta">最后更新：2026-11-12　适用版本：0.1.7 及以后</p>
+  <p class="meta">最后更新：2026-11-12　适用版本：0.1.8 及以后</p>
 
-  <p class="short"><b>一句话：这个扩展不收集、不上传、不存储你的任何内容。它不联网。</b></p>
+  <p class="short"><b>一句话：这个扩展不收集、不上传、不存储你的任何内容。运行时不联网。唯一的一次网络请求，是你主动点「下载本地组件」时去取那个安装包。</b></p>
 
   <h2>一、它读什么</h2>
   <ul>
@@ -66,15 +66,23 @@
     <li><b>不联网</b>（代码中没有任何网络请求，也没有 URL 配置）；</li>
     <li><b>不读写你的文件</b>，不执行系统命令；</li>
     <li>只做一件事：把扩展已经算好的内容按 WPS / Word 的格式写进剪贴板；</li>
-    <li>卸载：删除扩展目录，并删除注册表
-      <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host</code> 与
-      <code>HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host</code>。</li>
+    <li>安装程序只在你选择「下载一个 Python」之后，才会去你选的那个镜像（华为云 / npmmirror /
+      python.org）取官方 Python 安装包，装到当前用户下；不选就不会下载任何东西；</li>
+    <li>卸载：双击 <code>卸载本地组件.bat</code>，它删掉注册表
+      <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host</code>、
+      <code>HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host</code> 和
+      <code>...\Chromium\...</code> 三条登记，以及安装时生成的启动脚本。</li>
   </ul>
   <p>不装本地组件时扩展依然可用，只是复制出来的是纯文本。</p>
 
   <h2>四、网络</h2>
-  <p><b>扩展与本地组件都不发起任何网络请求。</b>没有账号、没有登录、没有统计、没有埋点、
+  <p><b>扩展在运行时不发起任何网络请求。</b>没有账号、没有登录、没有统计、没有埋点、
     没有远程配置、没有远程代码。公式渲染用的 KaTeX 是打包在扩展里的本地文件，不从 CDN 加载。</p>
+  <p>唯一的例外在侧边栏：没有本地组件的时候，那里会显示一个「下载本地组件」按钮。
+    <b>只有你点它</b>，扩展才会去我们的下载页取那个安装包（<code>download-host.zip</code>，约 36 KB）。
+    这次请求只带标准 HTTP 头，不包含你的任何内容，也不包含任何标识符；服务器能看到的就是你的 IP
+    和这次下载本身，我们没有为此设置日志或统计。取回来之后由浏览器存到你本机，扩展不会再访问网络，
+    直到你下次点那个按钮。</p>
 
   <h2>五、第三方</h2>
   <p>扩展内打包了开源组件 KaTeX（MIT 许可），版权归 Khan Academy 及贡献者所有，
@@ -92,10 +100,11 @@
 
   <div class="en">
     <h1>Privacy Policy · Paste2Doc</h1>
-    <p class="meta">Last updated: 2026-11-12　Applies to: 0.1.7 and later</p>
+    <p class="meta">Last updated: 2026-11-12　Applies to: 0.1.8 and later</p>
 
     <p class="short"><b>Short version: this extension does not collect, store, or transmit any of your
-      content. It makes no network requests.</b></p>
+      content. It makes no network requests at runtime. The single exception is the "Download local
+      component" button, which fetches that installer when you click it.</b></p>
 
     <h2>What it reads</h2>
     <p>Only after you click, it reads the answer (or the single block, or the range) you pointed at, in
@@ -118,15 +127,21 @@
       not execute commands. Without it the extension still works, producing plain text.</p>
 
     <h2>Network</h2>
-    <p>No network requests from the extension or the helper. No account, no analytics, no telemetry, no
+    <p>No network requests from the extension at runtime. No account, no analytics, no telemetry, no
       remote configuration, no remote code. KaTeX is bundled locally.</p>
+    <p>The single exception: when no local component is installed, the side panel shows a "Download local
+      component" button. Only if you click it does the extension fetch that installer (about 36 KB) from
+      our download page. The request carries standard HTTP headers only — none of your content and no
+      identifier; the server sees your IP and the download itself, and we keep no logs or analytics for
+      it. After saving the file the extension makes no further requests until you click that button
+      again.</p>
 
     <h2>Contact</h2>
     <p>Use the support link on the store listing, or open an issue at
       <a href="https://github.com/xuanyuan121/paste2doc/issues">GitHub Issues</a>.</p>
   </div>
 
-  <a class="back" href="index.html">← 回到首页</a>
+  <a class="back" href="index.html">← 回到首页</a>　　<a class="back" href="host.html">只下载本地组件</a>
 </div>
 </body>
 </html>
