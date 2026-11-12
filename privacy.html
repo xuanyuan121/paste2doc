@@ -66,9 +66,9 @@
     <li><b>不联网</b>（代码中没有任何网络请求，也没有 URL 配置）；</li>
     <li><b>不读写你的文件</b>，不执行系统命令；</li>
     <li>只做一件事：把扩展已经算好的内容按 WPS / Word 的格式写进剪贴板；</li>
-    <li>安装程序只在你选择「下载一个 Python」之后，才会去你选的那个镜像（华为云 / npmmirror /
-      python.org）取官方 Python 安装包，装到当前用户下；不选就不会下载任何东西；</li>
-    <li>卸载：双击 <code>卸载本地组件.bat</code>，它删掉注册表
+    <li>安装程序只做本机的事：复制文件、写宿主清单、登记浏览器路径和卸载项；
+      <b>它不联网、不下载任何东西</b>，运行环境已经打包在 exe 里，用户不需要另装 Python；</li>
+    <li>卸载：「设置 → 应用」里卸载「内容直贴 · 本地组件」，它会删掉注册表
       <code>HKCU\Software\Google\Chrome\NativeMessagingHosts\com.paste2doc.host</code>、
       <code>HKCU\Software\Microsoft\Edge\NativeMessagingHosts\com.paste2doc.host</code> 和
       <code>...\Chromium\...</code> 三条登记，以及安装时生成的启动脚本。</li>
